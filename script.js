@@ -86,10 +86,17 @@ function setupSmoothAnchors() {
       }
 
       event.preventDefault();
-      target.scrollIntoView({
+      const headerOffset = header?.offsetHeight || 0;
+      const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+
+      window.scrollTo({
+        top: Math.max(targetTop, 0),
         behavior: motionQuery.matches ? "auto" : "smooth",
-        block: "start",
       });
+
+      if (targetId !== "#inicio") {
+        history.pushState(null, "", targetId);
+      }
     });
   });
 }
@@ -99,7 +106,7 @@ function setupRevealAnimations() {
     document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale"),
   );
 
-  document.querySelectorAll(".steps, .cards-grid").forEach((group) => {
+  document.querySelectorAll(".steps, .cards-grid, .services-grid, .audience-grid").forEach((group) => {
     Array.from(group.children).forEach((item, index) => {
       item.style.setProperty("--reveal-delay", `${Math.min(index * 95, 380)}ms`);
     });
